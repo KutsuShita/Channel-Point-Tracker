@@ -8,7 +8,7 @@ ScriptName = "PointTracker"
 Website = ""
 Description = "!pt functionality to spend points on big ticket items"
 Creator = "Kutsu Shita"
-Version = "1.0.0.0"
+Version = "1.0.0.1"
 
 # Variables
 
