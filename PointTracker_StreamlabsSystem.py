@@ -66,7 +66,7 @@ def Execute(data):
                             send_message('"' + pt_name + '" has ' + str(pt_points) + ' points left')
                         
                         lines[pt_num][2] = pt_points
-                        with open('Services\Scripts\Channel-Point-Tracker\Tracked.txt') as tracked_file:
+                        with open('Services\Scripts\Channel-Point-Tracker\Tracked.txt', 'wb') as tracked_file:
                             writer = csv.writer(tracked_file)
                             writer.writerows(lines)
                         return
