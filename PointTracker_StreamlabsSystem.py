@@ -30,11 +30,28 @@ def Execute(data):
     else:
         user_name = data.UserName
 
+        if not data.GetParam(1):
+            for line in lines:
+                pt_name = line[0]
+                pt_points = line[2]
+                pt_percent_met = int((1 - float(pt_points) / 200000) * 100)
+                send_message(pt_name + ' - ' + pt_points + ' - ' + str(pt_percent_met) + '%')
+        
+            if user_name != chairman:
+                Parent.AddUserCooldown(ScriptName, Command, data.User, 30)
+            
+            return
+
         try:
             int(data.GetParam(1))
 
         except ValueError:
-            send_message(user_name + ', that\'s not how this command works, you boob! !pt [some number]')
+            send_message(user_name + ', that\'s not how this command works, you boob! -- !pt [some number]')
+            
+            if user_name != chairman:
+                Parent.AddUserCooldown(ScriptName, Command, data.User, 30)
+            
+            return
 
         else:
             pt_num = int(data.GetParam(1))
@@ -43,6 +60,7 @@ def Execute(data):
                 pt_name = lines[pt_num][0]
                 pt_desc = lines[pt_num][1]
                 pt_points = int(lines[pt_num][2])
+                pt_percent_met = int((1 - float(pt_points) / 200000) * 100)
                 pt_times_met = int(lines[pt_num][3])
 
                 if data.GetParam(2) and user_name == chairman:
@@ -63,20 +81,32 @@ def Execute(data):
                             lines[pt_num][3] = pt_times_met
                     
                         else:
-                            send_message('"' + pt_name + '" has ' + str(pt_points) + ' points left')
+                            send_message('"' + pt_name + '" has ' + str(pt_points) + ' (Progress: '  + str(pt_percent_met) + '%) points left')
                         
                         lines[pt_num][2] = pt_points
                         with open('Services\Scripts\Channel-Point-Tracker\Tracked.txt', 'wb') as tracked_file:
                             writer = csv.writer(tracked_file)
                             writer.writerows(lines)
+
+                        if user_name != chairman:
+                            Parent.AddUserCooldown(ScriptName, Command, data.User, 30)
+                        
                         return
                     
                 else:
-                    send_message('Challenge: ' + str(pt_num) + ' - "' + pt_name + '"; ' + pt_desc + ' | Points left: ' + str(pt_points) + ' | Times met: ' + str(pt_times_met))
+                    send_message('Challenge: ' + str(pt_num) + ' - "' + pt_name + '"; ' + pt_desc + ' | Points left: ' + str(pt_points) + ' (Progress: ' + str(pt_percent_met) + '%) | Times met: ' + str(pt_times_met))
+                    
+                    if user_name != chairman:
+                        Parent.AddUserCooldown(ScriptName, Command, data.User, 30)
+                    
                     return
 
             else:
                 send_message('Sorry ' + user_name + ', the number provided (' + str(pt_num) + ') does not have anything associated with it.')
+               
+                if user_name != chairman:
+                    Parent.AddUserCooldown(ScriptName, Command, data.User, 30)
+               
                 return          
 
         if user_name != chairman:
