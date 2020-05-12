@@ -8,7 +8,7 @@ ScriptName = "PointTracker"
 Website = ""
 Description = "!pt functionality to spend points on big ticket items"
 Creator = "Kutsu Shita"
-Version = "1.0.1.0"
+Version = "1.0.1.1"
 
 # Variables
 
@@ -73,6 +73,7 @@ def Execute(data):
                     else:
                         pt_substract = int(data.GetParam(2))
                         pt_points -= pt_substract
+                        pt_percent_met = int((1 - float(pt_points) / 200000) * 100)
 
                         if pt_points <= 0:
                             send_message('Challenge met! Looks like we get to enjoy "' + pt_name + '"...')
